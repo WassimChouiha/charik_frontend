@@ -2,6 +2,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "../ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 interface Deal {
   id: string;
@@ -31,8 +33,9 @@ const Deals = () => {
   console.log(filteredDeals);
 
   return (
-    <div className="flex flex-col">
-      <h1>Deals</h1>
+    <div className="flex flex-col items-center">
+          <Card className="flex flex-col w-[70%] mt-8 p-2">
+      <h1 className="text-2xl font-semibold text-center mb-2">Deals</h1>
       <input
         type="text"
         placeholder="Search deals"
@@ -46,31 +49,38 @@ const Deals = () => {
         </div>
       )}
       {!isLoading && (
-        <table>
-          <thead>
-            <tr>
-              <th>Deal Name</th>
-              <th>Stage</th>
-              <th>Close Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredDeals.map((deal) => (
-              <tr key={deal.id}>
-                <td>{deal.properties.dealname}</td>
-                <td>{deal.stage}</td>
-                <td>{deal.closeDate}</td>
-                <td>
-                  <a href={`https://app.hubspot.com/deals/${deal.id}`}>
-                    View Deal
-                  </a>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+        
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Deal Name</TableHead>
+                  <TableHead>Stage</TableHead>
+                  <TableHead>Close Date</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredDeals.map((deal) => (
+                  <TableRow key={deal.id}>
+                    <TableCell>{deal.properties.dealname}</TableCell>
+                    <TableCell>{deal.properties.dealstage}</TableCell>
+                    <TableCell>{deal.properties.closedate}</TableCell>
+                    <TableCell>{deal.properties.amount}</TableCell>
+                    <TableCell>
+                      <a href={`https://app.hubspot.com/deals/${deal.id}`}>
+                        View Deal
+                      </a>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          
+        </>
       )}
+      </Card>
     </div>
   );
 };
