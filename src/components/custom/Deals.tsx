@@ -3,7 +3,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "../ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { Button } from "../ui/button";
 
 interface Deal {
   id: string;
@@ -32,25 +40,37 @@ const Deals = () => {
   }, [deals, searchTerm]);
   console.log(filteredDeals);
 
+  const formatDate = (dateString: string | number | Date) => {
+    const date = new Date(dateString);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${
+      date.getMonth() + 1
+    }-${date.getDate()}-${date.getFullYear()} ${hours}:${minutes}`;
+  };
+
   return (
     <div className="flex flex-col items-center">
-          <Card className="flex flex-col w-[70%] mt-8 p-2">
-      <h1 className="text-2xl font-semibold text-center mb-2">Deals</h1>
-      <input
-        type="text"
-        placeholder="Search deals"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      {isLoading && (
-        <div className="flex flex-col gap-2">
-          <Skeleton className="h-8"></Skeleton>
-          <Skeleton className="h-28"></Skeleton>
-        </div>
-      )}
-      {!isLoading && (
-        <>
-        
+      <Card className="flex flex-col w-[70%] mt-8 p-2">
+        <h1 className="text-2xl font-semibold text-center mb-2">Deals</h1>
+        {isLoading && (
+          <div className="flex flex-col gap-2">
+            <Skeleton className="h-8 w-[50%] mx-8"></Skeleton>
+            <Skeleton className="h-96"></Skeleton>
+          </div>
+        )}
+        {!isLoading && (
+          <>
+            <div className="flex justify-between">
+              <input
+                className="w-[50%] mx-8 bg-neutral-100 border-2 rounded-md border-neutral-200 p-1 "
+                type="text"
+                placeholder="Search deals"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button onClick={()=>{console.log("ss")}}>Link Deal to Contact</Button>
+            </div>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -66,10 +86,16 @@ const Deals = () => {
                   <TableRow key={deal.id}>
                     <TableCell>{deal.properties.dealname}</TableCell>
                     <TableCell>{deal.properties.dealstage}</TableCell>
-                    <TableCell>{deal.properties.closedate}</TableCell>
+                    <TableCell>
+                      {formatDate(deal.properties.closedate)}
+                    </TableCell>
                     <TableCell>{deal.properties.amount}</TableCell>
                     <TableCell>
-                      <a href={`https://app.hubspot.com/deals/${deal.id}`}>
+                      <a
+                        className="border-[1px] border-neutral-200 p-1 hover:bg-neutral-400"
+                        target="_blank"
+                        href={`https://app.hubspot.com/contacts/48460805/record/0-3/${deal.id}`}
+                      >
                         View Deal
                       </a>
                     </TableCell>
@@ -77,9 +103,8 @@ const Deals = () => {
                 ))}
               </TableBody>
             </Table>
-          
-        </>
-      )}
+          </>
+        )}
       </Card>
     </div>
   );

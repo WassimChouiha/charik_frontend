@@ -16,13 +16,13 @@ const IframePage = () => {
 
   return (
     <div>
-      <div className="flex justify-center gap-2">
+      <div className="flex justify-center gap-2 mt-8">
         <Button
           onClick={onContactClick}
           className={`${
             tab === "contact"
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-red-500 hover:bg-red-600"
+              ? " "
+              : "bg-white text-black hover:bg-neutral-300"
           }`}
         >
           Contact
@@ -31,8 +31,8 @@ const IframePage = () => {
           onClick={onDealsClick}
           className={`${
             tab === "deals"
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "bg-red-500 hover:bg-red-600"
+              ? ""
+              : "bg-white text-black hover:bg-neutral-300"
           }`}
         >
           Deals
