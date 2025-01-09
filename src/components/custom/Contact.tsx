@@ -11,6 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { Button } from "../ui/button";
+import Popup from "./Popup";
 
 interface Contact {
   id: string;
@@ -22,6 +24,10 @@ const Contacts = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedContacts, setSelectedContacts] = useState<Set<string>>(
+    new Set()
+  );
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,7 +44,6 @@ const Contacts = () => {
         .includes(searchTerm.toLowerCase())
     );
   }, [contacts, searchTerm]);
-  console.log(filteredContacts);
 
   const formatDate = (dateString: string | number | Date) => {
     const date = new Date(dateString);
@@ -48,6 +53,20 @@ const Contacts = () => {
       date.getMonth() + 1
     }-${date.getDate()}-${date.getFullYear()} ${hours}:${minutes}`;
   };
+
+  const toggleContactSelection = (id: string) => {
+    setSelectedContacts((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (newSelected.has(id)) {
+        newSelected.delete(id);
+      } else {
+        newSelected.add(id);
+      }
+      return newSelected;
+    });
+  };
+
+  const isButtonDisabled = selectedContacts.size === 0;
 
   return (
     <div className="flex flex-col items-center">
@@ -62,16 +81,25 @@ const Contacts = () => {
         )}
         {!isLoading && (
           <>
-            <input
-              className="w-[50%] mx-8 bg-neutral-100 border-2 rounded-md border-neutral-200 p-1 "
-              type="text"
-              placeholder="Search contacts"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+            <div className="flex justify-between mb-4">
+              <input
+                className="w-[50%] mx-8 bg-neutral-100 border-2 rounded-md border-neutral-200 p-1"
+                type="text"
+                placeholder="Search contacts"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <Button
+                onClick={() => setIsPopupVisible(true)} 
+                disabled={isButtonDisabled}
+              >
+                Link Contact to Deal
+              </Button>
+            </div>
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Select</TableHead>
                   <TableHead>Contact Name</TableHead>
                   <TableHead>Contact Email</TableHead>
                   <TableHead>Create Date</TableHead>
@@ -80,7 +108,19 @@ const Contacts = () => {
               </TableHeader>
               <TableBody>
                 {filteredContacts.map((contact) => (
-                  <TableRow key={contact.id}>
+                  <TableRow
+                    key={contact.id}
+                    className={
+                      selectedContacts.has(contact.id) ? "bg-neutral-200" : ""
+                    }
+                  >
+                    <TableCell>
+                      <input
+                        type="checkbox"
+                        checked={selectedContacts.has(contact.id)}
+                        onChange={() => toggleContactSelection(contact.id)}
+                      />
+                    </TableCell>
                     <TableCell>{contact.properties.firstname}</TableCell>
                     <TableCell>{contact.properties.email}</TableCell>
                     <TableCell>
@@ -102,6 +142,14 @@ const Contacts = () => {
           </>
         )}
       </Card>
+     
+{isPopupVisible && (
+  <Popup
+    onClose={() => setIsPopupVisible(false)}
+    selectedContacts={Array.from(selectedContacts)}
+  />
+)}
+
     </div>
   );
 };

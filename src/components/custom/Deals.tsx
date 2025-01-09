@@ -24,6 +24,7 @@ const Deals = () => {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedDeals, setSelectedDeals] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setIsLoading(true);
@@ -48,6 +49,18 @@ const Deals = () => {
       date.getMonth() + 1
     }-${date.getDate()}-${date.getFullYear()} ${hours}:${minutes}`;
   };
+  const toggleDealSelection = (id: string) => {
+    setSelectedDeals((prevSelected) => {
+      const newSelected = new Set(prevSelected);
+      if (newSelected.has(id)) {
+        newSelected.delete(id);
+      } else {
+        newSelected.add(id);
+      }
+      return newSelected;
+    });
+  };
+  const isButtonDisabled = selectedDeals.size === 0;
 
   return (
     <div className="flex flex-col items-center">
@@ -61,7 +74,7 @@ const Deals = () => {
         )}
         {!isLoading && (
           <>
-            <div className="flex justify-between">
+            <div className="flex justify-between mb-4">
               <input
                 className="w-[50%] mx-8 bg-neutral-100 border-2 rounded-md border-neutral-200 p-1 "
                 type="text"
@@ -69,11 +82,17 @@ const Deals = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <Button onClick={()=>{console.log("ss")}}>Link Deal to Contact</Button>
+              <Button
+                onClick={() => console.log(Array.from(selectedDeals))}
+                disabled={isButtonDisabled}
+              >
+                Link Deal to contact
+              </Button>
             </div>
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Select</TableHead>
                   <TableHead>Deal Name</TableHead>
                   <TableHead>Stage</TableHead>
                   <TableHead>Close Date</TableHead>
@@ -83,7 +102,20 @@ const Deals = () => {
               </TableHeader>
               <TableBody>
                 {filteredDeals.map((deal) => (
-                  <TableRow key={deal.id}>
+                  <TableRow
+                    key={deal.id}
+                    className={
+                      selectedDeals.has(deal.id) ? "bg-neutral-200" : ""
+                    }
+                  >
+                    <TableCell>
+                      {" "}
+                      <input
+                        type="checkbox"
+                        checked={selectedDeals.has(deal.id)}
+                        onChange={() => toggleDealSelection(deal.id)}
+                      />
+                    </TableCell>
                     <TableCell>{deal.properties.dealname}</TableCell>
                     <TableCell>{deal.properties.dealstage}</TableCell>
                     <TableCell>
