@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
-import Popup from "./Popup";
+import LinkingPopup from "./Popup";
 
 interface Contact {
   id: string;
@@ -38,11 +38,12 @@ const Contacts = () => {
   }, []);
 
   const filteredContacts = useMemo(() => {
-    return contacts.filter((contact) =>
-      contact.properties.firstname
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
+    return contacts.filter((contact) => {
+      const firstName = contact.properties.firstname.toLowerCase();
+      const lastName = contact.properties.lastname.toLowerCase();
+      const searchLower = searchTerm.toLowerCase();
+      return firstName.includes(searchLower) || lastName.includes(searchLower);
+    });
   }, [contacts, searchTerm]);
 
   const formatDate = (dateString: string | number | Date) => {
@@ -90,7 +91,7 @@ const Contacts = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <Button
-                onClick={() => setIsPopupVisible(true)} 
+                onClick={() => setIsPopupVisible(true)}
                 disabled={isButtonDisabled}
               >
                 Link Contact to Deal
@@ -121,7 +122,10 @@ const Contacts = () => {
                         onChange={() => toggleContactSelection(contact.id)}
                       />
                     </TableCell>
-                    <TableCell>{contact.properties.firstname}</TableCell>
+                    <TableCell>
+                      {contact.properties.firstname}
+                      {contact.properties.lastname}
+                    </TableCell>
                     <TableCell>{contact.properties.email}</TableCell>
                     <TableCell>
                       {formatDate(contact.properties.createdate)}
@@ -142,14 +146,14 @@ const Contacts = () => {
           </>
         )}
       </Card>
-     
-{isPopupVisible && (
-  <Popup
-    onClose={() => setIsPopupVisible(false)}
-    selectedContacts={Array.from(selectedContacts)}
-  />
-)}
 
+      {isPopupVisible && (
+        <LinkingPopup
+          origin="deals"
+          onClose={() => setIsPopupVisible(false)}
+          selectedContacts={Array.from(selectedContacts)}
+        />
+      )}
     </div>
   );
 };

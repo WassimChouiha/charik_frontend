@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "../ui/table";
 import { Button } from "../ui/button";
+import LinkingPopup from "./Popup";
 
 interface Deal {
   id: string;
@@ -25,6 +26,7 @@ const Deals = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDeals, setSelectedDeals] = useState<Set<string>>(new Set());
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
@@ -49,6 +51,7 @@ const Deals = () => {
       date.getMonth() + 1
     }-${date.getDate()}-${date.getFullYear()} ${hours}:${minutes}`;
   };
+
   const toggleDealSelection = (id: string) => {
     setSelectedDeals((prevSelected) => {
       const newSelected = new Set(prevSelected);
@@ -83,7 +86,7 @@ const Deals = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <Button
-                onClick={() => console.log(Array.from(selectedDeals))}
+                onClick={() => setIsPopupVisible(true)}
                 disabled={isButtonDisabled}
               >
                 Link Deal to contact
@@ -95,6 +98,7 @@ const Deals = () => {
                   <TableHead>Select</TableHead>
                   <TableHead>Deal Name</TableHead>
                   <TableHead>Stage</TableHead>
+                  <TableHead>Create Date</TableHead>
                   <TableHead>Close Date</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead>Actions</TableHead>
@@ -109,7 +113,6 @@ const Deals = () => {
                     }
                   >
                     <TableCell>
-                      {" "}
                       <input
                         type="checkbox"
                         checked={selectedDeals.has(deal.id)}
@@ -118,6 +121,9 @@ const Deals = () => {
                     </TableCell>
                     <TableCell>{deal.properties.dealname}</TableCell>
                     <TableCell>{deal.properties.dealstage}</TableCell>
+                    <TableCell>
+                      {formatDate(deal.properties.createdate)}
+                    </TableCell>
                     <TableCell>
                       {formatDate(deal.properties.closedate)}
                     </TableCell>
@@ -138,6 +144,13 @@ const Deals = () => {
           </>
         )}
       </Card>
+      {isPopupVisible && (
+        <LinkingPopup
+          origin="contacts"
+          onClose={() => setIsPopupVisible(false)}
+          selectedContacts={Array.from(selectedDeals)}
+        />
+      )}
     </div>
   );
 };
