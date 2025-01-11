@@ -1,5 +1,5 @@
+import api from "@/lib/api";
 import { Deal } from "@/types/Deal";
-import axios from "axios";
 import { useEffect, useState } from "react";
 
 export const useGetDeals = () => {
@@ -8,8 +8,8 @@ export const useGetDeals = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get("http://127.0.0.1:8000/api/deals/")
+    api
+      .get("/deals/")
       .then((response) => setDeals(response.data.results))
       .finally(() => setIsLoading(false));
   }, []);

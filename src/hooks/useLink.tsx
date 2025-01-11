@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "@/lib/api";
 import { useState } from "react";
 
 interface Params {
@@ -22,9 +22,9 @@ export const useLink = ({ selectedData, onClose, linkingOrigin }: Params) => {
       to_id: toId,
     }));
 
-    axios
+    api
       .post(
-        `http://127.0.0.1:8000/api/link-objects/${
+        `/link-objects/${
           linkingOrigin === "contacts" ? "contacts/deals/" : "deals/contacts/"
         }`,
         linkData

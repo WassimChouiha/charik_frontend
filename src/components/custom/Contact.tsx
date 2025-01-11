@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "../ui/card";
 import {
@@ -14,6 +13,7 @@ import {
 import { Button } from "../ui/button";
 import LinkingPopup from "./Popup";
 import { formatDate } from "@/utils/utils";
+import api from "@/lib/api";
 
 interface Contact {
   id: string;
@@ -32,8 +32,8 @@ const Contacts = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get("http://127.0.0.1:8000/api/contacts/")
+    api
+      .get("/contacts/")
       .then((response) => setContacts(response.data.results))
       .finally(() => setIsLoading(false));
   }, []);
