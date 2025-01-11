@@ -31,7 +31,7 @@ function DealsTable({ selectedContacts, onClose }: Props) {
   if (showLoading) {
     return <p>...Loading</p>;
   }
-  
+
   return (
     <Table>
       <TableHeader>

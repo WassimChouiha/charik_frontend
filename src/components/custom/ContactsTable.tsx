@@ -49,8 +49,7 @@ function ContactsTable({ selectedDeals, onClose }: Props) {
               key={contact.id}
               onClick={() => handleLink(contact.id)}
             >
-              {contact.properties.firstname}
-              {contact.properties.lastname}
+              {contact.properties.firstname} {contact.properties.lastname}
             </TableCell>
             <TableCell>{contact.properties.email}</TableCell>
             <TableCell>{formatDate(contact.properties.createdate)}</TableCell>

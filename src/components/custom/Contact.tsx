@@ -13,6 +13,7 @@ import {
 } from "../ui/table";
 import { Button } from "../ui/button";
 import LinkingPopup from "./Popup";
+import { formatDate } from "@/utils/utils";
 
 interface Contact {
   id: string;
@@ -46,15 +47,6 @@ const Contacts = () => {
     });
   }, [contacts, searchTerm]);
 
-  const formatDate = (dateString: string | number | Date) => {
-    const date = new Date(dateString);
-    const hours = date.getHours().toString().padStart(2, "0");
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    return `${
-      date.getMonth() + 1
-    }-${date.getDate()}-${date.getFullYear()} ${hours}:${minutes}`;
-  };
-
   const toggleContactSelection = (id: string) => {
     setSelectedContacts((prevSelected) => {
       const newSelected = new Set(prevSelected);
@@ -75,10 +67,15 @@ const Contacts = () => {
         <h1 className="text-2xl font-semibold text-center mb-2">Contacts</h1>
 
         {isLoading && (
-          <div className="flex flex-col gap-2">
-            <Skeleton className="h-8 w-[50%] mx-8"></Skeleton>
-            <Skeleton className="h-96"></Skeleton>
-          </div>
+          <>
+            <div className="flex justify-between">
+              <Skeleton className="h-10 w-[50%] mx-8"></Skeleton>
+              <Skeleton className="h-10 w-40 px-4 py-2"></Skeleton>
+            </div>
+            <div className="flex flex-col my-2">
+              <Skeleton className="h-[512px] w-full"></Skeleton>
+            </div>
+          </>
         )}
         {!isLoading && (
           <>
@@ -123,7 +120,7 @@ const Contacts = () => {
                       />
                     </TableCell>
                     <TableCell>
-                      {contact.properties.firstname}
+                      {contact.properties.firstname}{" "}
                       {contact.properties.lastname}
                     </TableCell>
                     <TableCell>{contact.properties.email}</TableCell>

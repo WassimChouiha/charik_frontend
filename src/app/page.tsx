@@ -20,9 +20,7 @@ const IframePage = () => {
         <Button
           onClick={onContactClick}
           className={`${
-            tab === "contact"
-              ? " "
-              : "bg-white text-black hover:bg-neutral-300"
+            tab === "contact" ? " " : "bg-white text-black hover:bg-neutral-300"
           }`}
         >
           Contact
@@ -30,9 +28,7 @@ const IframePage = () => {
         <Button
           onClick={onDealsClick}
           className={`${
-            tab === "deals"
-              ? ""
-              : "bg-white text-black hover:bg-neutral-300"
+            tab === "deals" ? "" : "bg-white text-black hover:bg-neutral-300"
           }`}
         >
           Deals
