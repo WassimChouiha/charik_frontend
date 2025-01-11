@@ -1,5 +1,6 @@
 import api from "@/lib/api";
 import { useState } from "react";
+import { useToast } from "./use-toast";
 
 interface Params {
   selectedData: string[];
@@ -9,10 +10,14 @@ interface Params {
 
 export const useLink = ({ selectedData, onClose, linkingOrigin }: Params) => {
   const [linking, setLinking] = useState(false);
-
+  const { toast } = useToast();
   const handleLink = (toId: string) => {
     if (selectedData.length === 0) {
-      alert("No contacts selected");
+      toast({
+        variant: "destructive",
+        title: "Failed",
+        description: "No contacts selected.",
+      });
       return;
     }
 
@@ -30,12 +35,19 @@ export const useLink = ({ selectedData, onClose, linkingOrigin }: Params) => {
         linkData
       )
       .then(() => {
-        alert("successfully linked!");
+        toast({
+          title: "Success",
+          description: "successfully linked!",
+        });
         onClose();
       })
       .catch((error) => {
         console.error("Error linking:", error);
-        alert("Failed to link .");
+        toast({
+          title: "Failed",
+          description: "unable to linked!",
+          variant: "destructive",
+        });
       })
       .finally(() => setLinking(false));
   };
