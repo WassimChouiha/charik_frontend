@@ -10,6 +10,7 @@ import {
 import { formatDate } from "@/utils/utils";
 import { useLink } from "@/hooks/useLink";
 import { useGetContacts } from "@/hooks/useGetContacts";
+import { Skeleton } from "../ui/skeleton";
 
 interface Props {
   selectedDeals: string[];
@@ -29,7 +30,13 @@ function ContactsTable({ selectedDeals, onClose }: Props) {
   }, [isLoading, linking]);
 
   if (showLoading) {
-    return <p>...Loading</p>;
+    return (
+      <>
+        <div className="flex flex-col my-2">
+          <Skeleton className="h-[700px] w-full"></Skeleton>
+        </div>
+      </>
+    );
   }
 
   return (

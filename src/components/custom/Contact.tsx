@@ -73,7 +73,7 @@ const Contacts = () => {
               <Skeleton className="h-10 w-40 px-4 py-2"></Skeleton>
             </div>
             <div className="flex flex-col my-2">
-              <Skeleton className="h-[512px] w-full"></Skeleton>
+              <Skeleton className="h-[700px] w-full"></Skeleton>
             </div>
           </>
         )}
